@@ -1,66 +1,78 @@
 package controllers;
 
-import com.sun.tools.javac.Main;
+import data.Anime;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Stack;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class MainController {
-
-    @FXML
-    private Button AboutButton;
+public class MainController implements Initializable {
 
     @FXML
-    private Button AddButton;
+    private Button aboutButton;
 
     @FXML
-    private TableColumn<?,?> AnimeColumn;
+    private Button addButton;
 
     @FXML
-    private TableView<?> AnimeTable;
+    private TableColumn<Anime,String> animeColumn;
 
     @FXML
-    private Button AuthButton;
+    private TableView<Anime> animeTable;
 
     @FXML
-    private AnchorPane Content;
+    private Button authButton;
 
     @FXML
-    private Button ListAnimeButton;
+    private AnchorPane content;
 
     @FXML
-    private Pane ListAnimePane;
+    private Button listAnimeButton;
 
     @FXML
-    private Button RemoveButton;
+    private Pane listAnimePane;
 
     @FXML
-    private Button WatchedButton;
+    private Button removeButton;
 
     @FXML
-    private Pane WatchedPane;
+    private Button watchedButton;
 
     @FXML
-    private Button WatchingButton;
+    private Pane watchedPane;
 
     @FXML
-    private Pane WatchingPane;
+    private Button watchingButton;
 
     @FXML
-    private Button WillWatchButton;
+    private Pane watchingPane;
 
     @FXML
-    private Pane WillWatchPane;
+    private Button willWatchButton;
+
+    @FXML
+    private Pane willWatchPane;
+
+    @FXML
+    private ObservableList<Anime> animeList;
+
+    public MainController(){
+
+    }
 
     @FXML
     void OpenAboutPane(ActionEvent event) {
@@ -81,7 +93,7 @@ public class MainController {
     void OpenAuthPane(ActionEvent event) {
         FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("../view/auth.fxml"));
         try {
-            Stage stage = (Stage) AuthButton.getScene().getWindow();
+            Stage stage = (Stage) authButton.getScene().getWindow();
             stage.close();
             stage = new Stage();
             Scene scene = null;
@@ -113,4 +125,17 @@ public class MainController {
 
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        animeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
+        animeList = FXCollections.observableArrayList(new Anime(1,"sao","cringe"));
+        animeList.add(new Anime(2,"sa2o","cri2nge"));
+        animeTable.setItems(animeList);
+//        System.out.println(animeList);
+//        animeColumn = new TableColumn<>("name");
+//        animeColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+//        animeTable.getColumns().add(animeColumn);
+//        animeTable.getItems().add(new Anime(1,"sao","cringe"));
+//        animeTable.refresh();
+    }
 }

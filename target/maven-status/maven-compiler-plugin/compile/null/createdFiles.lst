@@ -3,3 +3,6 @@ controllers\AuthController.class
 controllers\AboutController.class
 controllers\MainController.class
 controllers\HelloController.class
+data\Anime.class
+database\DatabaseManager.class
+Test.class
