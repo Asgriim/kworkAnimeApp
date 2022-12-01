@@ -14,7 +14,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         System.out.println("git pidor blyat");
-
+        System.out.println("a mozhet ti pidor");
         launch();
 //        System.out.println("bebra");
     }
