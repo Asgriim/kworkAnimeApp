@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="401.0" prefWidth="600.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
+   <children>
+      <AnchorPane layoutY="1.0" prefHeight="400.0" prefWidth="139.0" style="-fx-background-color: #ec7c26;">
+         <children>
+            <Button fx:id="ListAnimeButton" layoutX="2.0" layoutY="61.0" mnemonicParsing="false" onAction="#OpenListAnimePane" prefHeight="26.0" prefWidth="139.0" style="-fx-background-color: #cd5700;" text="Список аниме" />
+            <Button fx:id="WatchingButton" layoutY="89.0" mnemonicParsing="false" onAction="#OpenWatchingPane" prefHeight="26.0" prefWidth="139.0" style="-fx-background-color: #ec7c26;" text="Смотрю" />
+            <Button fx:id="WillWatchButton" layoutY="115.0" mnemonicParsing="false" onAction="#OpenWillWatchPane" prefHeight="26.0" prefWidth="139.0" style="-fx-background-color: #ec7c26;" text="Буду смотреть" />
+            <Button fx:id="WatchedButton" layoutY="141.0" mnemonicParsing="false" onAction="#OpenWatchedPane" prefHeight="26.0" prefWidth="139.0" style="-fx-background-color: #ec7c26;" text="Просмотрено" />
+            <Button fx:id="AboutButton" layoutY="372.0" mnemonicParsing="false" onAction="#OpenAboutPane" prefHeight="26.0" prefWidth="139.0" style="-fx-background-color: #ec7c26;" text="О приложении" />
+            <Button fx:id="AuthButton" layoutY="345.0" mnemonicParsing="false" onAction="#OpenAuthPane" prefHeight="26.0" prefWidth="139.0" style="-fx-background-color: #ec7c26;" text="Авторизация" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="-14.0" layoutY="1.0" prefHeight="54.0" prefWidth="613.0" style="-fx-background-color: #1b1b1b;">
+         <children>
+            <Text fill="WHITE" layoutX="32.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Anime">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Rectangle arcHeight="8.0" arcWidth="8.0" fill="#ec7c26" height="28.0" layoutX="79.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="35.0" />
+            <Text layoutX="82.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="hub">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <Button fx:id="AddButton" layoutX="417.0" layoutY="10.0" mnemonicParsing="false" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Добавить аниме" />
+            <Button fx:id="RemoveButton" layoutX="537.0" layoutY="10.0" mnemonicParsing="false" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Удалить" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="Content" layoutX="140.0" layoutY="56.0" prefHeight="343.0" prefWidth="459.0" style="-fx-background-color: #ffffff;">
+         <children>
+            <Pane fx:id="ListAnimePane" prefHeight="343.0" prefWidth="459.0">
+               <children>
+                  <TableView fx:id="AnimeTable" layoutX="9.0" layoutY="4.0" prefHeight="336.0" prefWidth="443.0" style="-fx-background-color: #ffffff;">
+                    <columns>
+                      <TableColumn fx:id="AnimeColumn" prefWidth="441.59999084472656" text="Аниме" />
+                    </columns>
+                  </TableView>
+               </children>
+            </Pane>
+            <Pane fx:id="WatchingPane" prefHeight="343.0" prefWidth="459.0" visible="false" />
+            <Pane fx:id="WillWatchPane" prefHeight="343.0" prefWidth="459.0" visible="false" />
+            <Pane fx:id="WatchedPane" prefHeight="343.0" prefWidth="459.0" visible="false" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
