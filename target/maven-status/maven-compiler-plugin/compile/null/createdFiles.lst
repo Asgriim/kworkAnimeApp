@@ -1,8 +1,12 @@
-Main.class
 controllers\AuthController.class
-controllers\AboutController.class
-controllers\MainController.class
+data\AnimeStatus.class
 controllers\HelloController.class
 data\Anime.class
-database\DatabaseManager.class
 Test.class
+Main.class
+data\Permissions.class
+controllers\AboutController.class
+controllers\MainController.class
+data\User.class
+database\DatabaseManager.class
+database\MySqlManager.class

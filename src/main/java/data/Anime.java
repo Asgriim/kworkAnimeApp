@@ -51,4 +51,13 @@ public class Anime {
     public void setDescription(String description) {
         this.description.set(description);
     }
+
+    @Override
+    public String toString() {
+        return "Anime{" +
+                "id=" + id +
+                ", name=" + name.get() +
+                ", description=" + description.get() +
+                '}';
+    }
 }

@@ -1,6 +1,10 @@
 package controllers;
 
+
+import App.Main;
 import data.Anime;
+import database.DatabaseManager;
+import database.MySqlManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,12 +20,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    private DatabaseManager databaseManager;
     @FXML
     private Button aboutButton;
 
@@ -71,7 +78,8 @@ public class MainController implements Initializable {
     private ObservableList<Anime> animeList;
 
     public MainController(){
-
+        databaseManager = Main.getDatabaseManager();
+        animeList = FXCollections.observableArrayList();
     }
 
     @FXML
@@ -128,8 +136,13 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         animeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
-        animeList = FXCollections.observableArrayList(new Anime(1,"sao","cringe"));
-        animeList.add(new Anime(2,"sa2o","cri2nge"));
+        try {
+            animeList.addAll(databaseManager.getAnimeList());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        animeList = FXCollections.observableArrayList(new Anime(1,"sao","cringe"));
+//        animeList.add(new Anime(2,"sa2o","cri2nge"));
         animeTable.setItems(animeList);
 //        System.out.println(animeList);
 //        animeColumn = new TableColumn<>("name");
