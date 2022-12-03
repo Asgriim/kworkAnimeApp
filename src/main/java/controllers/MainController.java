@@ -36,6 +36,9 @@ public class MainController implements Initializable {
     private Button addButton;
 
     @FXML
+    private Button updateButton;
+
+    @FXML
     private TableColumn<Anime,String> animeColumn;
 
     @FXML
@@ -57,16 +60,34 @@ public class MainController implements Initializable {
     private Button removeButton;
 
     @FXML
+    private TableColumn<?, ?> watchedAnimeColumn;
+
+    @FXML
+    private TableView<?> watchedAnimeTable;
+
+    @FXML
     private Button watchedButton;
 
     @FXML
     private Pane watchedPane;
 
     @FXML
+    private TableColumn<?, ?> watchingAnimeColumn;
+
+    @FXML
+    private TableView<?> watchingAnimeTable;
+
+    @FXML
     private Button watchingButton;
 
     @FXML
     private Pane watchingPane;
+
+    @FXML
+    private TableColumn<?, ?> willWatchAnimeColumn;
+
+    @FXML
+    private TableView<?> willWatchAnimeTable;
 
     @FXML
     private Button willWatchButton;
@@ -114,23 +135,91 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    void OpenListAnimePane(ActionEvent event) {
+    void add(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(AddController.class.getResource("../view/add.fxml"));
+        try {
+            Stage stage = (Stage) addButton.getScene().getWindow();
+            stage.close();
+            stage = new Stage();
+            Scene scene = null;
+            scene = new Scene(fxmlLoader.load(), 350, 600);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    @FXML
+    void OpenListAnimePane(ActionEvent event) {
+        listAnimePane.setVisible(true);
+        watchingPane.setVisible(false);
+        willWatchPane.setVisible(false);
+        watchedPane.setVisible(false);
+
+        listAnimeButton.setStyle("-fx-background-color: #cd5700;");
+        watchingButton.setStyle("-fx-background-color: #ec7c26;");
+        willWatchButton.setStyle("-fx-background-color: #ec7c26;");
+        watchedButton.setStyle("-fx-background-color: #ec7c26;");
     }
 
     @FXML
     void OpenWatchedPane(ActionEvent event) {
+        listAnimePane.setVisible(false);
+        watchingPane.setVisible(false);
+        willWatchPane.setVisible(false);
+        watchedPane.setVisible(true);
 
+        listAnimeButton.setStyle("-fx-background-color: #ec7c26;");
+        watchingButton.setStyle("-fx-background-color: #ec7c26;");
+        willWatchButton.setStyle("-fx-background-color: #ec7c26;");
+        watchedButton.setStyle("-fx-background-color: #cd5700;");
     }
 
     @FXML
     void OpenWatchingPane(ActionEvent event) {
+        listAnimePane.setVisible(false);
+        watchingPane.setVisible(true);
+        willWatchPane.setVisible(false);
+        watchedPane.setVisible(false);
 
+        listAnimeButton.setStyle("-fx-background-color: #ec7c26;");
+        watchingButton.setStyle("-fx-background-color: #cd5700;");
+        willWatchButton.setStyle("-fx-background-color: #ec7c26;");
+        watchedButton.setStyle("-fx-background-color: #ec7c26;");
     }
 
     @FXML
     void OpenWillWatchPane(ActionEvent event) {
+        listAnimePane.setVisible(false);
+        watchingPane.setVisible(false);
+        willWatchPane.setVisible(true);
+        watchedPane.setVisible(false);
 
+        listAnimeButton.setStyle("-fx-background-color: #ec7c26;");
+        watchingButton.setStyle("-fx-background-color: #ec7c26;");
+        willWatchButton.setStyle("-fx-background-color: #cd5700;");
+        watchedButton.setStyle("-fx-background-color: #ec7c26;");
+    }
+
+    @FXML
+    void update(ActionEvent event) {
+
+    }
+
+    void recolor(Pane pane){  //todo разобраться
+        listAnimePane.setVisible(false);
+        watchingPane.setVisible(false);
+        willWatchPane.setVisible(false);
+        watchedPane.setVisible(false);
+
+        listAnimeButton.setStyle("-fx-background-color: #ec7c26;");
+        watchingButton.setStyle("-fx-background-color: #ec7c26;");
+        willWatchButton.setStyle("-fx-background-color: #ec7c26;");
+        watchedButton.setStyle("-fx-background-color: #ec7c26;");
+
+        pane.setVisible(true);
+        pane.setStyle("-fx-background-color: #cd5700;");
     }
 
     @Override

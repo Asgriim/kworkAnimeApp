@@ -5,43 +5,29 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class AuthController {
+public class AddController {
 
     @FXML
-    private TextField LoginField;
+    private Button addButton;
 
     @FXML
     private Button backButton;
 
     @FXML
-    private javafx.scene.control.PasswordField PasswordField;
+    private TextArea descriptionField;
 
     @FXML
-    private Button AuthButton;
+    private TextField nameField;
 
     @FXML
-    private Button RegistrationButton;
+    void add(ActionEvent event) {
 
-    @FXML
-    void OpenRegistrationPage(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(RegistrationController.class.getResource("../view/registration.fxml"));
-        try {
-            Stage stage = (Stage) RegistrationButton.getScene().getWindow();
-            stage.close();
-            stage = new Stage();
-            Scene scene = null;
-            scene = new Scene(fxmlLoader.load(), 600, 401);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @FXML
@@ -60,8 +46,4 @@ public class AuthController {
         }
     }
 
-    @FXML
-    void Auth(ActionEvent event) {
-
-    }
 }

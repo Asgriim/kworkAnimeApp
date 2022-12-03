@@ -11,38 +11,22 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class AuthController {
+public class RegistrationController {
 
     @FXML
     private TextField LoginField;
 
     @FXML
+    private Button authButton;
+
+    @FXML
     private Button backButton;
 
     @FXML
-    private javafx.scene.control.PasswordField PasswordField;
+    private PasswordField passwordField;
 
     @FXML
-    private Button AuthButton;
-
-    @FXML
-    private Button RegistrationButton;
-
-    @FXML
-    void OpenRegistrationPage(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(RegistrationController.class.getResource("../view/registration.fxml"));
-        try {
-            Stage stage = (Stage) RegistrationButton.getScene().getWindow();
-            stage.close();
-            stage = new Stage();
-            Scene scene = null;
-            scene = new Scene(fxmlLoader.load(), 600, 401);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private Button registrationButton;
 
     @FXML
     void back(ActionEvent event) {
@@ -61,7 +45,24 @@ public class AuthController {
     }
 
     @FXML
-    void Auth(ActionEvent event) {
+    void openAuthPage(ActionEvent event) {
+        FXMLLoader fxmlLoader = new FXMLLoader(AuthController.class.getResource("../view/auth.fxml"));
+        try {
+            Stage stage = (Stage) authButton.getScene().getWindow();
+            stage.close();
+            stage = new Stage();
+            Scene scene = null;
+            scene = new Scene(fxmlLoader.load(), 600, 401);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    void register(ActionEvent event) {
 
     }
+
 }
