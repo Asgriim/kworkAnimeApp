@@ -23,7 +23,7 @@
                 </Button>
             </children>
         </AnchorPane>
-        <TextField fx:id="LoginField" layoutX="225.0" layoutY="154.0">
+        <TextField fx:id="loginField" layoutX="225.0" layoutY="154.0">
             <font>
                 <Font size="14.0" />
             </font>
@@ -40,5 +40,10 @@
             <Font size="14.0" />
          </font>
       </PasswordField>
+      <Text fx:id="errorText" fill="#ff0303" layoutX="210.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="179.73675537109375">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>

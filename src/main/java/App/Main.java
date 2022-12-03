@@ -1,5 +1,7 @@
 package App;
 
+import data.Permissions;
+import data.User;
 import database.DatabaseManager;
 import database.MySqlManager;
 import javafx.application.Application;
@@ -15,8 +17,10 @@ import java.security.NoSuchAlgorithmException;
 public class Main extends Application {
 
     private static DatabaseManager databaseManager;
+    private static User user;
     @Override
     public void start(Stage stage) throws Exception {
+        user = new User(0,"","", Permissions.GUEST);
         databaseManager = MySqlManager.getInstance();
         if (!databaseManager.configureDb()){
             System.out.println("umer");
@@ -47,5 +51,9 @@ public class Main extends Application {
 
     public static DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+
+    public static User getUser() {
+        return user;
     }
 }

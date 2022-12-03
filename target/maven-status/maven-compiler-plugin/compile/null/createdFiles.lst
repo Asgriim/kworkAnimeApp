@@ -1,9 +1,11 @@
+App\Main.class
+controllers\AddController.class
 controllers\AuthController.class
+controllers\RegistrationController.class
 data\AnimeStatus.class
 controllers\HelloController.class
 data\Anime.class
 Test.class
-Main.class
 data\Permissions.class
 controllers\AboutController.class
 controllers\MainController.class

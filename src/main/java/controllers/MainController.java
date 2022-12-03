@@ -3,6 +3,9 @@ package controllers;
 
 import App.Main;
 import data.Anime;
+import data.AnimeStatus;
+import data.Permissions;
+import data.User;
 import database.DatabaseManager;
 import database.MySqlManager;
 import javafx.collections.FXCollections;
@@ -60,10 +63,10 @@ public class MainController implements Initializable {
     private Button removeButton;
 
     @FXML
-    private TableColumn<?, ?> watchedAnimeColumn;
+    private TableColumn<Anime,String> watchedAnimeColumn;
 
     @FXML
-    private TableView<?> watchedAnimeTable;
+    private TableView<Anime> watchedAnimeTable;
 
     @FXML
     private Button watchedButton;
@@ -72,10 +75,10 @@ public class MainController implements Initializable {
     private Pane watchedPane;
 
     @FXML
-    private TableColumn<?, ?> watchingAnimeColumn;
+    private TableColumn<Anime,String> watchingAnimeColumn;
 
     @FXML
-    private TableView<?> watchingAnimeTable;
+    private TableView<Anime> watchingAnimeTable;
 
     @FXML
     private Button watchingButton;
@@ -84,10 +87,10 @@ public class MainController implements Initializable {
     private Pane watchingPane;
 
     @FXML
-    private TableColumn<?, ?> willWatchAnimeColumn;
+    private TableColumn<Anime,String> willWatchAnimeColumn;
 
     @FXML
-    private TableView<?> willWatchAnimeTable;
+    private TableView<Anime> willWatchAnimeTable;
 
     @FXML
     private Button willWatchButton;
@@ -97,10 +100,23 @@ public class MainController implements Initializable {
 
     @FXML
     private ObservableList<Anime> animeList;
-
+    @FXML
+    private ObservableList<Anime> willWatchAnimeList;
+    @FXML
+    private ObservableList<Anime> watchingAnimeList;
+    @FXML
+    private ObservableList<Anime> watchedAnimeList;
+    
+    private User user;
+    
     public MainController(){
-        databaseManager = Main.getDatabaseManager();
-        animeList = FXCollections.observableArrayList();
+        this.databaseManager = Main.getDatabaseManager();
+        this.animeList = FXCollections.observableArrayList();
+        this.watchingAnimeList = FXCollections.observableArrayList();
+        this.willWatchAnimeList = FXCollections.observableArrayList();
+        this.watchedAnimeList = FXCollections.observableArrayList();
+        this.user = Main.getUser();
+        System.out.println(user);
     }
 
     @FXML
@@ -152,62 +168,53 @@ public class MainController implements Initializable {
 
     @FXML
     void OpenListAnimePane(ActionEvent event) {
-        listAnimePane.setVisible(true);
-        watchingPane.setVisible(false);
-        willWatchPane.setVisible(false);
-        watchedPane.setVisible(false);
-
-        listAnimeButton.setStyle("-fx-background-color: #cd5700;");
-        watchingButton.setStyle("-fx-background-color: #ec7c26;");
-        willWatchButton.setStyle("-fx-background-color: #ec7c26;");
-        watchedButton.setStyle("-fx-background-color: #ec7c26;");
+        // TODO: 03.12.2022 добавить предложение зарегаться при попытке нажатия гостя
+        recolor(listAnimePane,listAnimeButton);
     }
 
     @FXML
     void OpenWatchedPane(ActionEvent event) {
-        listAnimePane.setVisible(false);
-        watchingPane.setVisible(false);
-        willWatchPane.setVisible(false);
-        watchedPane.setVisible(true);
-
-        listAnimeButton.setStyle("-fx-background-color: #ec7c26;");
-        watchingButton.setStyle("-fx-background-color: #ec7c26;");
-        willWatchButton.setStyle("-fx-background-color: #ec7c26;");
-        watchedButton.setStyle("-fx-background-color: #cd5700;");
+        recolor(watchedPane,watchedButton);
     }
 
     @FXML
     void OpenWatchingPane(ActionEvent event) {
-        listAnimePane.setVisible(false);
-        watchingPane.setVisible(true);
-        willWatchPane.setVisible(false);
-        watchedPane.setVisible(false);
-
-        listAnimeButton.setStyle("-fx-background-color: #ec7c26;");
-        watchingButton.setStyle("-fx-background-color: #cd5700;");
-        willWatchButton.setStyle("-fx-background-color: #ec7c26;");
-        watchedButton.setStyle("-fx-background-color: #ec7c26;");
+        recolor(watchingPane,watchingButton);
     }
 
     @FXML
     void OpenWillWatchPane(ActionEvent event) {
-        listAnimePane.setVisible(false);
-        watchingPane.setVisible(false);
-        willWatchPane.setVisible(true);
-        watchedPane.setVisible(false);
-
-        listAnimeButton.setStyle("-fx-background-color: #ec7c26;");
-        watchingButton.setStyle("-fx-background-color: #ec7c26;");
-        willWatchButton.setStyle("-fx-background-color: #cd5700;");
-        watchedButton.setStyle("-fx-background-color: #ec7c26;");
+        recolor(willWatchPane,willWatchButton);
     }
 
     @FXML
     void update(ActionEvent event) {
+        if(user.getPermission().equals(Permissions.GUEST)){
+            animeList.clear();
+            try {
+                animeList.addAll(databaseManager.getAnimeList());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        animeList.clear();
+        watchedAnimeList.clear();
+        willWatchAnimeList.clear();
+        watchingAnimeList.clear();
+        try {
+            animeList.addAll(databaseManager.getAnimeList());
+            watchedAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WATCHED));
+            watchingAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WATCHING));
+            willWatchAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WILL_WATCH));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    void recolor(Pane pane){  //todo разобраться
+
+    void recolor(Pane pane,Button button){
         listAnimePane.setVisible(false);
         watchingPane.setVisible(false);
         willWatchPane.setVisible(false);
@@ -219,25 +226,35 @@ public class MainController implements Initializable {
         watchedButton.setStyle("-fx-background-color: #ec7c26;");
 
         pane.setVisible(true);
-        pane.setStyle("-fx-background-color: #cd5700;");
+        button.setStyle("-fx-background-color: #cd5700;");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // TODO: 03.12.2022 добавить сюда обновления интерфейса для юзера или админа
         animeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
+        watchedAnimeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
+        watchingAnimeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
+        willWatchAnimeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
         try {
             animeList.addAll(databaseManager.getAnimeList());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        animeList = FXCollections.observableArrayList(new Anime(1,"sao","cringe"));
-//        animeList.add(new Anime(2,"sa2o","cri2nge"));
         animeTable.setItems(animeList);
-//        System.out.println(animeList);
-//        animeColumn = new TableColumn<>("name");
-//        animeColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-//        animeTable.getColumns().add(animeColumn);
-//        animeTable.getItems().add(new Anime(1,"sao","cringe"));
-//        animeTable.refresh();
+        if (user.getPermission().equals(Permissions.GUEST)){
+            return;
+        }
+        try {
+            watchedAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WATCHED));
+            watchingAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WATCHING));
+            willWatchAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WILL_WATCH));
+            watchedAnimeTable.setItems(watchedAnimeList);
+            watchingAnimeTable.setItems(watchingAnimeList);
+            willWatchAnimeTable.setItems(willWatchAnimeList);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
