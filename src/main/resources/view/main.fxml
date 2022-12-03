@@ -57,7 +57,7 @@
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="removeButton" disable="true" layoutX="779.0" layoutY="25.0" mnemonicParsing="false" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Удалить" visible="false">
+            <Button fx:id="removeButton" disable="true" layoutX="490.0" layoutY="25.0" mnemonicParsing="false" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Удалить">
                <font>
                   <Font size="18.0" />
                </font>

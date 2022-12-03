@@ -243,6 +243,7 @@ public class MainController implements Initializable {
         }
         animeTable.setItems(animeList);
         if (user.getPermission().equals(Permissions.GUEST)){
+            hideAdminButtons();
             return;
         }
         try {
@@ -255,6 +256,21 @@ public class MainController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        if (user.getPermission().equals(Permissions.ADMIN)){
+            showAdminButtons();
+        }
+        else {
+            hideAdminButtons();
+        }
+    }
 
+    private void hideAdminButtons(){
+        removeButton.setVisible(false);
+        addButton.setVisible(false);
+    }
+
+    private void showAdminButtons(){
+        removeButton.setVisible(true);
+        addButton.setVisible(true);
     }
 }
