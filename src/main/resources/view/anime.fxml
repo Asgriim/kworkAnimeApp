@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="600.0" prefWidth="350.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AnimeController">
+    <children>
+        <AnchorPane prefHeight="60.0" prefWidth="350.0" style="-fx-background-color: #1b1b1b;" />
+        <Button fx:id="addToWatchingButton" layoutX="14.0" layoutY="536.0" mnemonicParsing="false" onAction="#addToWatching" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Смотрю">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+      <Button fx:id="addToWillWatchButton" layoutX="104.0" layoutY="536.0" mnemonicParsing="false" onAction="#addToWillWatch" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Буду смотреть">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="addToWatchedButton" layoutX="228.0" layoutY="536.0" mnemonicParsing="false" onAction="#addToWatched" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Просмотрено">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Text fx:id="nameText" layoutX="64.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="236.80006408691406">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <Text fx:id="descriptionText" layoutX="64.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="236.80006408691406">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+    </children>
+</AnchorPane>

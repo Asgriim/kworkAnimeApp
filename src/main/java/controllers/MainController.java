@@ -14,11 +14,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -27,6 +29,7 @@ import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -272,5 +275,39 @@ public class MainController implements Initializable {
     private void showAdminButtons(){
         removeButton.setVisible(true);
         addButton.setVisible(true);
+    }
+
+    Anime temp;
+    Date lastClickTime;
+    @FXML
+    void handleRowSelect(MouseEvent event) {
+        Anime row = animeTable.getSelectionModel().getSelectedItem();
+        if (row == null) return;
+        if(row != temp){
+            temp = row;
+            lastClickTime = new Date();
+        } else {
+            Date now = new Date();
+            long diff = now.getTime() - lastClickTime.getTime();
+            if (diff < 300){
+                FXMLLoader loader1 = new FXMLLoader();
+                loader1.setLocation(getClass().getResource("../view/anime.fxml"));
+                try {
+                    loader1.load();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Parent root = loader1.getRoot();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setResizable(false);
+                AnimeController controller = loader1.getController();
+                controller.insertValues(row.getName(),row.getDescription());
+                stage.showAndWait();
+
+            } else {
+                lastClickTime = new Date();
+            }
+        }
     }
 }
