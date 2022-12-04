@@ -19,7 +19,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -36,6 +39,9 @@ public class MainController implements Initializable {
     private DatabaseManager databaseManager;
     @FXML
     private Button aboutButton;
+
+    @FXML
+    private TextField searchField;
 
     @FXML
     private Button addButton;
@@ -108,6 +114,7 @@ public class MainController implements Initializable {
     private ObservableList<Anime> watchingAnimeList;
     @FXML
     private ObservableList<Anime> watchedAnimeList;
+
     
     private User user;
     
@@ -404,6 +411,11 @@ public class MainController implements Initializable {
             return watchedAnimeTable;
         }
         return null;
+    }
+
+    @FXML
+    void search(KeyEvent event) {
+
     }
 
 

@@ -7,7 +7,14 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="350.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AnimeController">
     <children>
-        <AnchorPane prefHeight="60.0" prefWidth="350.0" style="-fx-background-color: #1b1b1b;" />
+        <AnchorPane prefHeight="60.0" prefWidth="350.0" style="-fx-background-color: #1b1b1b;">
+         <children>
+            <Text fx:id="nameText" fill="#ec7c26" layoutX="57.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="236.80006408691406">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+         </children></AnchorPane>
         <Button fx:id="addToWatchingButton" layoutX="14.0" layoutY="536.0" mnemonicParsing="false" onAction="#addToWatching" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Смотрю">
             <font>
                 <Font size="14.0" />
@@ -23,12 +30,7 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <Text fx:id="nameText" layoutX="64.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="236.80006408691406">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Text>
-      <Text fx:id="descriptionText" layoutX="64.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="236.80006408691406">
+      <Text fx:id="descriptionText" layoutX="25.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0000145435333">
          <font>
             <Font size="14.0" />
          </font>
