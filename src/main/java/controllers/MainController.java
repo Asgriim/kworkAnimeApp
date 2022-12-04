@@ -7,10 +7,10 @@ import data.AnimeStatus;
 import data.Permissions;
 import data.User;
 import database.DatabaseManager;
-import database.MySqlManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,16 +20,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -172,21 +171,43 @@ public class MainController implements Initializable {
     @FXML
     void OpenListAnimePane(ActionEvent event) {
         // TODO: 03.12.2022 добавить предложение зарегаться при попытке нажатия гостя
+        if (!user.getPermission().equals(Permissions.ADMIN)){
+            hideRemoveButton();
+        }
+        clearAllSelection();
         recolor(listAnimePane,listAnimeButton);
     }
 
     @FXML
     void OpenWatchedPane(ActionEvent event) {
+        if (user.getPermission().equals(Permissions.GUEST)){
+            openErrorPage();
+            return;
+        }
+        clearAllSelection();
+        showRemoveButton();
         recolor(watchedPane,watchedButton);
     }
 
     @FXML
     void OpenWatchingPane(ActionEvent event) {
+        if (user.getPermission().equals(Permissions.GUEST)){
+            openErrorPage();
+            return;
+        }
+        clearAllSelection();
+        showRemoveButton();
         recolor(watchingPane,watchingButton);
     }
 
     @FXML
     void OpenWillWatchPane(ActionEvent event) {
+        if (user.getPermission().equals(Permissions.GUEST)){
+            openErrorPage();
+            return;
+        }
+        clearAllSelection();
+        showRemoveButton();
         recolor(willWatchPane,willWatchButton);
     }
 
@@ -247,6 +268,7 @@ public class MainController implements Initializable {
         animeTable.setItems(animeList);
         if (user.getPermission().equals(Permissions.GUEST)){
             hideAdminButtons();
+            animeTable.setOnMouseClicked(getTableEventHandler(animeTable));
             return;
         }
         try {
@@ -265,6 +287,41 @@ public class MainController implements Initializable {
         else {
             hideAdminButtons();
         }
+        animeTable.setOnMouseClicked(getTableEventHandler(animeTable));
+        willWatchAnimeTable.setOnMouseClicked(getTableEventHandler(willWatchAnimeTable));
+        watchedAnimeTable.setOnMouseClicked(getTableEventHandler(watchedAnimeTable));
+        watchingAnimeTable.setOnMouseClicked(getTableEventHandler(watchingAnimeTable));
+    }
+
+
+    private EventHandler<MouseEvent> getTableEventHandler(TableView<Anime> table){
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                    if (mouseEvent.getClickCount() == 2){
+                        FXMLLoader loader1 = new FXMLLoader();
+                        loader1.setLocation(getClass().getResource("../view/anime.fxml"));
+                        try {
+                            loader1.load();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Parent root = loader1.getRoot();
+                        Stage stage = new Stage();
+                        stage.setScene(new Scene(root));
+                        stage.setResizable(false);
+                        AnimeController controller = loader1.getController();
+                        Anime row = table.getSelectionModel().getSelectedItem();
+                        if (row == null) return;
+                        controller.setAnimeId(row.getId());
+                        stage.showAndWait();
+                        update(new ActionEvent());
+                    }
+                }
+            }
+        };
+        return eventHandler;
     }
 
     private void hideAdminButtons(){
@@ -277,37 +334,77 @@ public class MainController implements Initializable {
         addButton.setVisible(true);
     }
 
-    Anime temp;
-    Date lastClickTime;
-    @FXML
-    void handleRowSelect(MouseEvent event) {
-        Anime row = animeTable.getSelectionModel().getSelectedItem();
-        if (row == null) return;
-        if(row != temp){
-            temp = row;
-            lastClickTime = new Date();
-        } else {
-            Date now = new Date();
-            long diff = now.getTime() - lastClickTime.getTime();
-            if (diff < 300){
-                FXMLLoader loader1 = new FXMLLoader();
-                loader1.setLocation(getClass().getResource("../view/anime.fxml"));
-                try {
-                    loader1.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Parent root = loader1.getRoot();
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.setResizable(false);
-                AnimeController controller = loader1.getController();
-                controller.insertValues(row.getName(),row.getDescription());
-                stage.showAndWait();
+    private void clearAllSelection(){
+        animeTable.getSelectionModel().clearSelection();
+        willWatchAnimeTable.getSelectionModel().clearSelection();
+        watchedAnimeTable.getSelectionModel().clearSelection();
+        watchingAnimeTable.getSelectionModel().clearSelection();
+    }
 
-            } else {
-                lastClickTime = new Date();
+    @FXML
+    public void removeAnime(ActionEvent event) {
+        TableView<Anime> selectedTable = whatSelected();
+        if(selectedTable == null){
+            return;
+        }
+        if (selectedTable == animeTable && user.getPermission().equals(Permissions.ADMIN)){
+            try {
+                databaseManager.removeAnime(user,selectedTable.getSelectionModel().getSelectedItem());
+                update(new ActionEvent());
+                return;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return;
             }
         }
+        try {
+            databaseManager.removeUserAnime(user,selectedTable.getSelectionModel().getSelectedItem());
+            update(new ActionEvent());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+    void hideRemoveButton(){
+        removeButton.setVisible(false);
+    }
+
+    void showRemoveButton(){
+        removeButton.setVisible(true);
+    }
+
+    void openErrorPage(){
+        Stage stage = new Stage();
+        Scene scene = null;
+        FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("../view/error.fxml"));
+        try {
+            scene = new Scene(fxmlLoader.load(), 600, 401);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    TableView<Anime> whatSelected(){
+        if (animeTable.getSelectionModel().getSelectedItem() != null){
+            System.out.println("anime selected");
+            return animeTable;
+        }
+        if (watchingAnimeTable.getSelectionModel().getSelectedItem() != null){
+            System.out.println("watching selected");
+            return watchingAnimeTable;
+        }
+        if (willWatchAnimeTable.getSelectionModel().getSelectedItem() != null){
+            System.out.println("will wath selected");
+            return willWatchAnimeTable;
+        }
+        if (watchedAnimeTable.getSelectionModel().getSelectedItem() != null){
+            System.out.println("watched selected");
+            return watchedAnimeTable;
+        }
+        return null;
+    }
+
+
 }

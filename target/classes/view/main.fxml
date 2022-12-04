@@ -57,7 +57,7 @@
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="removeButton" disable="true" layoutX="490.0" layoutY="25.0" mnemonicParsing="false" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Удалить">
+            <Button fx:id="removeButton"  layoutX="490.0" layoutY="25.0" mnemonicParsing="false" onAction="#removeAnime" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Удалить">
                <font>
                   <Font size="18.0" />
                </font>
@@ -73,7 +73,7 @@
          <children>
             <Pane fx:id="listAnimePane" prefHeight="510.0" prefWidth="690.0">
                <children>
-                  <TableView fx:id="animeTable" onMouseClicked="#handleRowSelect" prefHeight="510.0" prefWidth="690.0" style="-fx-background-color: #ffffff;">
+                  <TableView fx:id="animeTable" prefHeight="510.0" prefWidth="690.0" style="-fx-background-color: #ffffff;">
                     <columns>
                       <TableColumn fx:id="animeColumn" prefWidth="689.2000274658203" text="Аниме" />
                     </columns>

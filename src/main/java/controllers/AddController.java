@@ -53,7 +53,7 @@ public class AddController {
             errorText.setText("Добавьте описание");
             return;
         }
-        Anime anime = new Anime(0,name,desc);
+        Anime anime = new Anime(0,name.strip(),desc.strip());
 
         try {
             if(databaseManager.addAnime(user,anime).equals("ok")){
