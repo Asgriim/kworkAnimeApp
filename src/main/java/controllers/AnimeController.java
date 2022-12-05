@@ -51,10 +51,8 @@ public class AnimeController implements Initializable {
 
     public void setAnimeId(int animeId) {
         this.animeId = animeId;
-        System.out.println("aldkasd: "+ animeId);
         try {
             tempAnime = databaseManager.getAnimeById(animeId);
-            System.out.println("seted anime " + tempAnime);
             if ( tempAnime == null){
                 nameText.setText("Нет данных");
                 return;
@@ -67,7 +65,6 @@ public class AnimeController implements Initializable {
 
     @FXML
     void addToWatched(ActionEvent event) {
-        System.out.println(tempAnime);
         if (user.getPermission().equals(Permissions.GUEST)){
             openErrorPage();
             return;

@@ -14,11 +14,14 @@ import java.util.List;
 public class MySqlManager implements DatabaseManager{
     private final HikariDataSource dataSource;
     private static DatabaseManager instance;
+//    ---------------------------------------------
+//      Используется библиотека HikariCP для управления пулом подключений к базе.
+//    ---------------------------------------------
     private MySqlManager(String jdbcURL, String username, String password) {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(jdbcURL);
-        config.setUsername(username);
-        config.setPassword(password);
+        HikariConfig config = new HikariConfig(); // заполняем конфиг для хикари
+        config.setJdbcUrl(jdbcURL); //ссылка на базу данных
+        config.setUsername(username); // логин к базе
+        config.setPassword(password);// пароль к базе
         config.setMaximumPoolSize(10);
         config.addDataSourceProperty("cachePrepStmts", "true"); // кешировать  prepareStatement
         config.addDataSourceProperty("prepStmtCacheSize", "250"); // макс количество кешированных prepareStatement
@@ -28,9 +31,9 @@ public class MySqlManager implements DatabaseManager{
 
     public static DatabaseManager getInstance() {
         if (instance == null){
-            instance = new MySqlManager("jdbc:mysql://remotemysql.com:3306/BlaLdACAvt",
-                    "BlaLdACAvt",
-                    "PCEYHiRpnt"
+            instance = new MySqlManager("jdbc:mysql://remotemysql.com:3306/BlaLdACAvt", // бесплатная MySQL база данных
+                    "BlaLdACAvt", // логин
+                    "PCEYHiRpnt"// пароль
             );
         }
         return instance;
@@ -148,14 +151,14 @@ public class MySqlManager implements DatabaseManager{
         try (Connection connection =dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("insert into "+ user.getAnimeTableName() +" values (?,?,?)")){
             if (isAnimeExistInUserTable(user,anime)){
-                System.out.println("anime exist");
+
                 removeUserAnime(user, anime);
             }
             statement.setInt(1,anime.getId());
             statement.setString(2,anime.getName());
             statement.setString(3,AnimeStatus.WATCHING.toString());
             statement.execute();
-            System.out.println("insert into "+ user.getAnimeTableName() +" values (?,?,?)");
+
         }
         return "ok";
     }
@@ -192,8 +195,7 @@ public class MySqlManager implements DatabaseManager{
 
     @Override
     public String addAnime(User user, Anime anime) throws SQLException {
-        // TODO: 02.12.2022 добавить проверку что админ
-        try (Connection connection =dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("INSERT INTO Animes(Name,Description) VALUES (?,?)")){
             statement.setString(1,anime.getName());
             statement.setString(2,anime.getDescription());
@@ -220,12 +222,10 @@ public class MySqlManager implements DatabaseManager{
 
     @Override
     public boolean removeAnime(User user, Anime anime) throws SQLException {
-        // TODO: 02.12.2022 добавить проверку на админа
         try (Connection connection =dataSource.getConnection();
              Statement statement = connection.createStatement()){
             statement.execute("DELETE FROM Animes WHERE Id=" + anime.getId());
         }
-        // TODO: 02.12.2022 мб сделать проверку на получилось удалить или нет, но мне впадлу
         return true;
     }
 
@@ -245,10 +245,8 @@ public class MySqlManager implements DatabaseManager{
         List<Anime> userAnimeList = new ArrayList<>();
         try (Connection connection =dataSource.getConnection();
              Statement statement = connection.createStatement()){
-            System.out.println("SELECT * FROM "+ user.getAnimeTableName() +" WHERE Status='" + status.toString()+"'");
             ResultSet resultSet = statement.executeQuery("SELECT * FROM "+ user.getAnimeTableName() +" WHERE Status='" + status.toString()+"'");
             while (resultSet.next()){
-                // TODO: 02.12.2022 возможно здесь будут траблы из-за описания
                 Anime anime = new Anime(resultSet.getInt("AnimeId"),resultSet.getString("Name"),null);
                 userAnimeList.add(anime);
             }
@@ -256,7 +254,6 @@ public class MySqlManager implements DatabaseManager{
         return userAnimeList;
     }
 
-    // TODO: 02.12.2022 заменить на приват
     private boolean isAnimeExistInUserTable(User user,Anime anime) throws SQLException {
         try (Connection connection =dataSource.getConnection();
              Statement statement = connection.createStatement()){

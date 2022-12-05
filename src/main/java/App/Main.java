@@ -23,7 +23,7 @@ public class Main extends Application {
         user = new User(0,"","", Permissions.GUEST);
         databaseManager = MySqlManager.getInstance();
         if (!databaseManager.configureDb()){
-            System.out.println("umer");
+            System.out.println("Не удалось подключится к серверу");
             return;
         }
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("../view/main.fxml"));
@@ -34,7 +34,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch();
-//        System.out.println("bebra");
     }
 
     public static String getHash(String s){

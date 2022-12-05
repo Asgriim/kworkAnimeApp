@@ -21,10 +21,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.InputMethodEvent;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -32,11 +29,23 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
 
-    private DatabaseManager databaseManager;
+    @FXML
+    private TableColumn<Anime,String> searchColumn;
+
+    @FXML
+    private TableView<Anime> searchTable;
+
+    @FXML
+    private Pane searchPane;
+
+    private final DatabaseManager databaseManager;
     @FXML
     private Button aboutButton;
 
@@ -106,6 +115,8 @@ public class MainController implements Initializable {
     @FXML
     private Pane willWatchPane;
 
+    private Button hidden = new Button();
+
     @FXML
     private ObservableList<Anime> animeList;
     @FXML
@@ -114,9 +125,10 @@ public class MainController implements Initializable {
     private ObservableList<Anime> watchingAnimeList;
     @FXML
     private ObservableList<Anime> watchedAnimeList;
+    @FXML
+    private ObservableList<Anime> searchAnimeList;
 
-    
-    private User user;
+    private final User user;
     
     public MainController(){
         this.databaseManager = Main.getDatabaseManager();
@@ -124,6 +136,7 @@ public class MainController implements Initializable {
         this.watchingAnimeList = FXCollections.observableArrayList();
         this.willWatchAnimeList = FXCollections.observableArrayList();
         this.watchedAnimeList = FXCollections.observableArrayList();
+        this.searchAnimeList = FXCollections.observableArrayList();
         this.user = Main.getUser();
         System.out.println(user);
     }
@@ -177,7 +190,6 @@ public class MainController implements Initializable {
 
     @FXML
     void OpenListAnimePane(ActionEvent event) {
-        // TODO: 03.12.2022 добавить предложение зарегаться при попытке нажатия гостя
         if (!user.getPermission().equals(Permissions.ADMIN)){
             hideRemoveButton();
         }
@@ -250,6 +262,7 @@ public class MainController implements Initializable {
         watchingPane.setVisible(false);
         willWatchPane.setVisible(false);
         watchedPane.setVisible(false);
+        searchPane.setVisible(false);
 
         listAnimeButton.setStyle("-fx-background-color: #ec7c26;");
         watchingButton.setStyle("-fx-background-color: #ec7c26;");
@@ -262,20 +275,21 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // TODO: 03.12.2022 добавить сюда обновления интерфейса для юзера или админа
         animeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
         watchedAnimeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
         watchingAnimeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
         willWatchAnimeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
+        searchColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
         try {
             animeList.addAll(databaseManager.getAnimeList());
+            searchTable.setItems(searchAnimeList);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         animeTable.setItems(animeList);
         if (user.getPermission().equals(Permissions.GUEST)){
             hideAdminButtons();
-            animeTable.setOnMouseClicked(getTableEventHandler(animeTable));
+            setAllTableEventHandlers();
             return;
         }
         try {
@@ -285,6 +299,7 @@ public class MainController implements Initializable {
             watchedAnimeTable.setItems(watchedAnimeList);
             watchingAnimeTable.setItems(watchingAnimeList);
             willWatchAnimeTable.setItems(willWatchAnimeList);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -294,12 +309,17 @@ public class MainController implements Initializable {
         else {
             hideAdminButtons();
         }
+        setAllTableEventHandlers();
+    }
+
+
+    void setAllTableEventHandlers(){
         animeTable.setOnMouseClicked(getTableEventHandler(animeTable));
         willWatchAnimeTable.setOnMouseClicked(getTableEventHandler(willWatchAnimeTable));
         watchedAnimeTable.setOnMouseClicked(getTableEventHandler(watchedAnimeTable));
         watchingAnimeTable.setOnMouseClicked(getTableEventHandler(watchingAnimeTable));
+        searchTable.setOnMouseClicked(getTableEventHandler(searchTable));
     }
-
 
     private EventHandler<MouseEvent> getTableEventHandler(TableView<Anime> table){
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -403,7 +423,7 @@ public class MainController implements Initializable {
             return watchingAnimeTable;
         }
         if (willWatchAnimeTable.getSelectionModel().getSelectedItem() != null){
-            System.out.println("will wath selected");
+            System.out.println("will watch selected");
             return willWatchAnimeTable;
         }
         if (watchedAnimeTable.getSelectionModel().getSelectedItem() != null){
@@ -415,7 +435,16 @@ public class MainController implements Initializable {
 
     @FXML
     void search(KeyEvent event) {
-
+        if (event.getCode().equals(KeyCode.ENTER)){
+            String s = searchField.getText();
+            if (s.isEmpty()){
+                return;
+            }
+            searchAnimeList.clear();
+            List<Anime> temp =  animeList.stream().filter(a -> a.getName().toLowerCase(Locale.ROOT).contains(s.toLowerCase(Locale.ROOT))).collect(Collectors.toList());
+            searchAnimeList.addAll(temp);
+            recolor(searchPane,hidden);
+        }
     }
 
 

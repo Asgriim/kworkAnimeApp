@@ -73,6 +73,15 @@
       </AnchorPane>
       <AnchorPane fx:id="content" layoutX="210.0" layoutY="91.0" prefHeight="510.0" prefWidth="690.0" style="-fx-background-color: #ffffff;">
          <children>
+            <Pane fx:id="searchPane" prefHeight="510.0" prefWidth="690.0" visible="false">
+               <children>
+                  <TableView fx:id="searchTable" prefHeight="510.0" prefWidth="690.0">
+                    <columns>
+                      <TableColumn fx:id="searchColumn" prefWidth="689.2000274658203" text="Аниме" />
+                    </columns>
+                  </TableView>
+               </children>
+            </Pane>
             <Pane fx:id="listAnimePane" prefHeight="510.0" prefWidth="690.0">
                <children>
                   <TableView fx:id="animeTable" prefHeight="510.0" prefWidth="690.0" style="-fx-background-color: #ffffff;">
