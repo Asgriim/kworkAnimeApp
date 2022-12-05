@@ -1,3 +1,4 @@
+App\Main.class
 controllers\AddController.class
 controllers\AuthController.class
 controllers\RegistrationController.class
@@ -8,10 +9,8 @@ data\Permissions.class
 controllers\ErrorController.class
 controllers\MainController$1.class
 controllers\AboutController.class
+controllers\MainController.class
 controllers\AnimeController.class
 data\User.class
 database\DatabaseManager.class
 database\MySqlManager.class
-App\Main.class
-controllers\HelloController.class
-controllers\MainController.class

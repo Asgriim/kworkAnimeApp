@@ -236,6 +236,9 @@ public class MainController implements Initializable {
             animeList.clear();
             try {
                 animeList.addAll(databaseManager.getAnimeList());
+                if (searchPane.isVisible()){
+                    recolor(listAnimePane,listAnimeButton);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -250,6 +253,9 @@ public class MainController implements Initializable {
             watchedAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WATCHED));
             watchingAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WATCHING));
             willWatchAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WILL_WATCH));
+            if (searchPane.isVisible()){
+                recolor(listAnimePane,listAnimeButton);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
