@@ -53,22 +53,22 @@
                   <Font name="System Bold" size="36.0" />
                </font>
             </Text>
-            <Button fx:id="addButton" layoutX="597.0" layoutY="25.0" mnemonicParsing="false" onAction="#add" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Добавить аниме">
+            <Button fx:id="addButton" layoutX="603.0" layoutY="25.0" mnemonicParsing="false" onAction="#add" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Добавить аниме">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="removeButton" layoutX="490.0" layoutY="25.0" mnemonicParsing="false" onAction="#removeAnime" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Удалить">
+            <Button fx:id="removeButton" layoutX="450.0" layoutY="25.0" mnemonicParsing="false" onAction="#removeAnime" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Удалить">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="updateButton" layoutX="771.0" layoutY="25.0" mnemonicParsing="false" onAction="#update" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Обновить">
+            <Button fx:id="updateButton" layoutX="780.0" layoutY="25.0" mnemonicParsing="false" onAction="#update" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Обновить">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <TextField fx:id="searchField" layoutX="261.0" layoutY="33.0" onKeyPressed="#search" prefHeight="26.0" prefWidth="187.0" />
+            <TextField fx:id="searchField" layoutX="235.0" layoutY="33.0" onKeyPressed="#search" prefHeight="26.0" prefWidth="187.0" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="content" layoutX="210.0" layoutY="91.0" prefHeight="510.0" prefWidth="690.0" style="-fx-background-color: #ffffff;">

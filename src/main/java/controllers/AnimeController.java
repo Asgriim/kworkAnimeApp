@@ -123,6 +123,7 @@ public class AnimeController implements Initializable {
         try {
             scene = new Scene(fxmlLoader.load(), 600, 401);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);

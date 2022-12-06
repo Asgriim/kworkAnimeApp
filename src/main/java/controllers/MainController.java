@@ -16,10 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
@@ -149,6 +146,7 @@ public class MainController implements Initializable {
         try {
             scene = new Scene(fxmlLoader.load(), 600, 401);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -166,6 +164,7 @@ public class MainController implements Initializable {
             Scene scene = null;
             scene = new Scene(fxmlLoader.load(), 600, 401);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -182,6 +181,7 @@ public class MainController implements Initializable {
             Scene scene = null;
             scene = new Scene(fxmlLoader.load(), 350, 600);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -194,6 +194,7 @@ public class MainController implements Initializable {
             hideRemoveButton();
         }
         clearAllSelection();
+        removeButton.setText("Удалить");
         recolor(listAnimePane,listAnimeButton);
     }
 
@@ -205,6 +206,7 @@ public class MainController implements Initializable {
         }
         clearAllSelection();
         showRemoveButton();
+        removeButton.setText("Удалить метку");
         recolor(watchedPane,watchedButton);
     }
 
@@ -216,6 +218,7 @@ public class MainController implements Initializable {
         }
         clearAllSelection();
         showRemoveButton();
+        removeButton.setText("Удалить метку");
         recolor(watchingPane,watchingButton);
     }
 
@@ -227,6 +230,7 @@ public class MainController implements Initializable {
         }
         clearAllSelection();
         showRemoveButton();
+        removeButton.setText("Удалить метку");
         recolor(willWatchPane,willWatchButton);
     }
 
@@ -281,6 +285,11 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        animeTable.setPlaceholder(new Label("Вы ничего не добавили в этот список"));
+        watchedAnimeTable.setPlaceholder(new Label("Вы ничего не добавили в этот список"));
+        watchingAnimeTable.setPlaceholder(new Label("Вы ничего не добавили в этот список"));
+        willWatchAnimeTable.setPlaceholder(new Label("Вы ничего не добавили в этот список"));
         animeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
         watchedAnimeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
         watchingAnimeColumn.setCellValueFactory(new PropertyValueFactory<Anime,String>("name"));
@@ -413,6 +422,7 @@ public class MainController implements Initializable {
         try {
             scene = new Scene(fxmlLoader.load(), 600, 401);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);

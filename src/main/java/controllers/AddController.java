@@ -64,6 +64,20 @@ public class AddController {
             errorText.setText("Серверная ошибка.\nПопробуйте позже.");
         }
 
+        FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("../view/main.fxml"));
+        try {
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.close();
+            stage = new Stage();
+            Scene scene = null;
+            scene = new Scene(fxmlLoader.load(), 900, 600);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @FXML
@@ -76,6 +90,7 @@ public class AddController {
             Scene scene = null;
             scene = new Scene(fxmlLoader.load(), 900, 600);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -53,6 +53,7 @@ public class AuthController {
             Scene scene = null;
             scene = new Scene(fxmlLoader.load(), 600, 401);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -69,6 +70,7 @@ public class AuthController {
             Scene scene = null;
             scene = new Scene(fxmlLoader.load(), 900, 600);
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
