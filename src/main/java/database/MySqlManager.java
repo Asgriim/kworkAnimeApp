@@ -22,7 +22,7 @@ public class MySqlManager implements DatabaseManager{
         config.setJdbcUrl(jdbcURL); //ссылка на базу данных
         config.setUsername(username); // логин к базе
         config.setPassword(password);// пароль к базе
-        config.setMaximumPoolSize(10);
+        config.setMaximumPoolSize(7);
         config.addDataSourceProperty("cachePrepStmts", "true"); // кешировать  prepareStatement
         config.addDataSourceProperty("prepStmtCacheSize", "250"); // макс количество кешированных prepareStatement
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048"); // макс длина prepareStatement, которое будет закешированно
@@ -59,11 +59,14 @@ public class MySqlManager implements DatabaseManager{
                     "    Permission ENUM('USER','ADMIN')" +
                     ");");
             // создать таблицу аниме для админа (буду смотреть/смотрю/просмотрел)
-            out = statement.execute("CREATE TABLE IF NOT EXISTS user_1_animes(" +
-                    "  AnimeId INT," +
-                    "  Name TEXT NOT NULL," +
-                    "  Status ENUM('WATCHING','WILL_WATCH','WATCHED')" +
-                    ")");
+            out = statement.execute("CREATE TABLE IF NOT EXISTS USERS_ANIMES(" +
+                    "    UserId INT," +
+                    "    AnimeId INT," +
+                    "    AnimeName TEXT," +
+                    "    Status ENUM('WATCHING','WILL_WATCH','WATCHED')," +
+                    "    FOREIGN KEY (UserId) REFERENCES Users (Id) ON DELETE CASCADE," +
+                    "    FOREIGN KEY (AnimeId) REFERENCES Animes (Id) ON DELETE CASCADE" +
+                    "    );");
             return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -109,7 +112,7 @@ public class MySqlManager implements DatabaseManager{
             statement.setString(3, Permissions.USER.toString());
             statement.execute();
             User user = selectUser(login, passwd);
-            createUserAnimeTable(user);
+//            createUserAnimeTable(user);
             return "register";
         }
     }
@@ -127,16 +130,16 @@ public class MySqlManager implements DatabaseManager{
         }
     }
 
-    private void createUserAnimeTable(User user) throws SQLException {
-        try (Connection connection =dataSource.getConnection();
-             Statement statement =connection.createStatement()){
-            statement.execute("CREATE TABLE IF NOT EXISTS "+ user.getAnimeTableName() +"(" +
-                    "  AnimeId INT," +
-                    "  Name TEXT NOT NULL," +
-                    "  Status ENUM('WATCHING','WILL_WATCH','WATCHED')" +
-                    ")");
-        }
-    }
+//    private void createUserAnimeTable(User user) throws SQLException {
+//        try (Connection connection =dataSource.getConnection();
+//             Statement statement =connection.createStatement()){
+//            statement.execute("CREATE TABLE IF NOT EXISTS "+ user.getAnimeTableName() +"(" +
+//                    "  AnimeId INT," +
+//                    "  Name TEXT NOT NULL," +
+//                    "  Status ENUM('WATCHING','WILL_WATCH','WATCHED')" +
+//                    ")");
+//        }
+//    }
 
     @Override
     public User logIn(String login, String passwd) throws SQLException {
@@ -149,14 +152,14 @@ public class MySqlManager implements DatabaseManager{
     @Override
     public String addToWatching(User user, Anime anime) throws SQLException {
         try (Connection connection =dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("insert into "+ user.getAnimeTableName() +" values (?,?,?)")){
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO USERS_ANIMES (UserId, AnimeId, AnimeName, Status) VALUES (?,?,?,?)")){
             if (isAnimeExistInUserTable(user,anime)){
-
                 removeUserAnime(user, anime);
             }
-            statement.setInt(1,anime.getId());
-            statement.setString(2,anime.getName());
-            statement.setString(3,AnimeStatus.WATCHING.toString());
+            statement.setInt(1,user.getId());
+            statement.setInt(2,anime.getId());
+            statement.setString(3,anime.getName());
+            statement.setString(4,AnimeStatus.WATCHING.toString());
             statement.execute();
 
         }
@@ -166,13 +169,14 @@ public class MySqlManager implements DatabaseManager{
     @Override
     public String addToWatched(User user, Anime anime) throws SQLException {
         try (Connection connection =dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("insert into "+ user.getAnimeTableName() +" values (?,?,?)")){
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO USERS_ANIMES (UserId, AnimeId, AnimeName, Status) VALUES (?,?,?,?)")){
             if (isAnimeExistInUserTable(user,anime)){
                 removeUserAnime(user, anime);
             }
-            statement.setInt(1,anime.getId());
-            statement.setString(2,anime.getName());
-            statement.setString(3,AnimeStatus.WATCHED.toString());
+            statement.setInt(1,user.getId());
+            statement.setInt(2,anime.getId());
+            statement.setString(3,anime.getName());
+            statement.setString(4,AnimeStatus.WATCHED.toString());
             statement.execute();
         }
         return "ok";
@@ -181,13 +185,14 @@ public class MySqlManager implements DatabaseManager{
     @Override
     public String addToWillWatch(User user, Anime anime) throws SQLException {
         try (Connection connection =dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("insert into "+ user.getAnimeTableName() +" values (?,?,?)")){
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO USERS_ANIMES (UserId, AnimeId, AnimeName, Status) VALUES (?,?,?,?)")){
             if (isAnimeExistInUserTable(user,anime)){
                 removeUserAnime(user, anime);
             }
-            statement.setInt(1,anime.getId());
-            statement.setString(2,anime.getName());
-            statement.setString(3,AnimeStatus.WILL_WATCH.toString());
+            statement.setInt(1,user.getId());
+            statement.setInt(2,anime.getId());
+            statement.setString(3,anime.getName());
+            statement.setString(4,AnimeStatus.WILL_WATCH.toString());
             statement.execute();
         }
         return "ok";
@@ -232,8 +237,9 @@ public class MySqlManager implements DatabaseManager{
     @Override
     public boolean removeUserAnime(User user, Anime anime) throws SQLException {
         try (Connection connection =dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("DELETE FROM "+ user.getAnimeTableName() +" where AnimeId=?")){
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM USERS_ANIMES where AnimeId=? and UserId=?")){
             statement.setInt(1,anime.getId());
+            statement.setInt(2,user.getId());
             statement.execute();
 //            statement.execute("DELETE FROM "+ user.getAnimeTableName() +" where AnimeId =" + anime.getId());
         }
@@ -245,9 +251,9 @@ public class MySqlManager implements DatabaseManager{
         List<Anime> userAnimeList = new ArrayList<>();
         try (Connection connection =dataSource.getConnection();
              Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+ user.getAnimeTableName() +" WHERE Status='" + status.toString()+"'");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM USERS_ANIMES WHERE UserId="+ user.getId() + " AND Status='"+ status + "'");
             while (resultSet.next()){
-                Anime anime = new Anime(resultSet.getInt("AnimeId"),resultSet.getString("Name"),null);
+                Anime anime = new Anime(resultSet.getInt("AnimeId"),resultSet.getString("AnimeName"),null);
                 userAnimeList.add(anime);
             }
         }
@@ -257,7 +263,7 @@ public class MySqlManager implements DatabaseManager{
     private boolean isAnimeExistInUserTable(User user,Anime anime) throws SQLException {
         try (Connection connection =dataSource.getConnection();
              Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM "+ user.getAnimeTableName() +" WHERE AnimeId=" + anime.getId());
+            ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM USERS_ANIMES WHERE AnimeId=" + anime.getId() + " and UserId=" + user.getId());
             resultSet.next();
             return  resultSet.getInt(1) > 0;
         }

@@ -8,11 +8,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
 
 public class Main extends Application {
 
@@ -21,6 +24,11 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         user = new User(0,"","", Permissions.GUEST);
+        Logger.getLogger("com.zaxxer.hikari.pool.PoolBase").setLevel(Level.OFF);
+         Logger.getLogger("com.zaxxer.hikari.pool.HikariPool").setLevel(Level.OFF);
+         Logger.getLogger("com.zaxxer.hikari.HikariDataSource").setLevel(Level.OFF);
+         Logger.getLogger("com.zaxxer.hikari.HikariConfig").setLevel(Level.OFF);
+         Logger.getLogger("com.zaxxer.hikari.util.DriverDataSource").setLevel(Level.OFF);
         databaseManager = MySqlManager.getInstance();
         if (!databaseManager.configureDb()){
             System.out.println("Не удалось подключится к серверу");

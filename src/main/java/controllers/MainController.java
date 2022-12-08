@@ -21,6 +21,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
 
+    @FXML
+    public Text userNameText;
     @FXML
     private TableColumn<Anime,String> searchColumn;
 
@@ -156,18 +159,40 @@ public class MainController implements Initializable {
 
     @FXML
     void OpenAuthPane(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("../view/auth.fxml"));
-        try {
-            Stage stage = (Stage) authButton.getScene().getWindow();
-            stage.close();
-            stage = new Stage();
-            Scene scene = null;
-            scene = new Scene(fxmlLoader.load(), 600, 401);
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.show();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(user.getPermission().equals(Permissions.GUEST)) {
+            FXMLLoader fxmlLoader = new FXMLLoader(MainController.class.getResource("../view/auth.fxml"));
+            try {
+                Stage stage = (Stage) authButton.getScene().getWindow();
+                stage.close();
+                stage = new Stage();
+                Scene scene = null;
+                scene = new Scene(fxmlLoader.load(), 600, 401);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.show();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else {
+            user.setId(0);
+            user.setPermission(Permissions.GUEST);
+            user.setName("");
+            user.setPassword("");
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("../view/main.fxml"));
+                Stage stage = (Stage) authButton.getScene().getWindow();
+                stage.close();
+                stage = new Stage();
+                Scene scene = null;
+                scene = new Scene(fxmlLoader.load(), 900, 600);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -305,16 +330,18 @@ public class MainController implements Initializable {
         if (user.getPermission().equals(Permissions.GUEST)){
             hideAdminButtons();
             setAllTableEventHandlers();
+            userNameText.setText("Гость");
             return;
         }
         try {
+            authButton.setText("Выйти");
             watchedAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WATCHED));
             watchingAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WATCHING));
             willWatchAnimeList.addAll(databaseManager.getUserAnimes(user, AnimeStatus.WILL_WATCH));
             watchedAnimeTable.setItems(watchedAnimeList);
             watchingAnimeTable.setItems(watchingAnimeList);
             willWatchAnimeTable.setItems(willWatchAnimeList);
-
+            userNameText.setText(user.getName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
