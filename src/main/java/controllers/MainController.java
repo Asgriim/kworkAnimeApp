@@ -481,6 +481,7 @@ public class MainController implements Initializable {
         if (event.getCode().equals(KeyCode.ENTER)){
             String s = searchField.getText();
             if (s.isEmpty()){
+                recolor(listAnimePane,listAnimeButton);
                 return;
             }
             searchAnimeList.clear();

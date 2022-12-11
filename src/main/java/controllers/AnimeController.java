@@ -2,6 +2,7 @@ package controllers;
 
 import App.Main;
 import data.Anime;
+import data.AnimeStatus;
 import data.Permissions;
 import data.User;
 import database.DatabaseManager;
@@ -20,6 +21,11 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class AnimeController implements Initializable {
+
+    @FXML
+    public Text statusText;
+
+    private final String statusTextPref = "Текущий статус: ";
 
     @FXML
     private Button addToWatchedButton;
@@ -58,7 +64,23 @@ public class AnimeController implements Initializable {
                 return;
             }
             insertValues(tempAnime.getName(),tempAnime.getDescription());
+            AnimeStatus status = databaseManager.getUserAnimeStatus(user,tempAnime);
+            if (status != null){
+                if (status.equals(AnimeStatus.WATCHED)){
+                    statusText.setText(statusTextPref + "просмотрено");
+                }
+                if(status.equals(AnimeStatus.WILL_WATCH)){
+                    statusText.setText(statusTextPref + "буду смотреть");
+                }
+                if(status.equals(AnimeStatus.WATCHING)){
+                    statusText.setText(statusTextPref + "смотрю");
+                }
+            }
+            else {
+                statusText.setText(statusTextPref + "нет");
+            }
         } catch (SQLException e) {
+            e.printStackTrace();
             nameText.setText("Произошла ошибка");
         }
     }
@@ -73,6 +95,7 @@ public class AnimeController implements Initializable {
             return;
         }
         try {
+            statusText.setText(statusTextPref + "просмотрено");
             databaseManager.addToWatched(user,tempAnime);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,6 +112,7 @@ public class AnimeController implements Initializable {
             return;
         }
         try {
+            statusText.setText(statusTextPref + "смотрю");
             databaseManager.addToWatching(user,tempAnime);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,6 +129,7 @@ public class AnimeController implements Initializable {
             return;
         }
         try {
+            statusText.setText(statusTextPref + "буду смотреть");
             databaseManager.addToWillWatch(user,tempAnime);
         } catch (SQLException e) {
             e.printStackTrace();

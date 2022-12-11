@@ -20,5 +20,5 @@ public interface DatabaseManager {
     boolean removeAnime(User user, Anime anime) throws SQLException;
     boolean removeUserAnime(User user, Anime anime) throws SQLException;
     List<Anime> getUserAnimes(User user, AnimeStatus status) throws SQLException;
-
+    AnimeStatus getUserAnimeStatus(User user, Anime anime) throws SQLException;
 }

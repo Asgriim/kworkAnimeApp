@@ -260,6 +260,23 @@ public class MySqlManager implements DatabaseManager{
         return userAnimeList;
     }
 
+    @Override
+    public AnimeStatus getUserAnimeStatus(User user, Anime anime) throws SQLException {
+        if (!isAnimeExistInUserTable(user, anime)){
+            return null;
+        }
+        try (Connection connection =dataSource.getConnection();
+             Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM USERS_ANIMES WHERE UserId="+ user.getId() + " AND AnimeId=" + anime.getId());
+            if (!resultSet.next()){
+                return null;
+            }
+            return AnimeStatus.valueOf(resultSet.getString("Status"));
+        }
+
+    }
+
+
     private boolean isAnimeExistInUserTable(User user,Anime anime) throws SQLException {
         try (Connection connection =dataSource.getConnection();
              Statement statement = connection.createStatement()){

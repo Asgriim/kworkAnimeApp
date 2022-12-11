@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="350.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AnimeController">
+<AnchorPane prefHeight="630.0" prefWidth="350.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AnimeController">
     <children>
         <AnchorPane prefHeight="60.0" prefWidth="350.0" style="-fx-background-color: #1b1b1b;">
          <children>
@@ -35,5 +35,14 @@
             <Font size="14.0" />
          </font>
       </Text>
+      <AnchorPane layoutY="570.0" prefHeight="60.0" prefWidth="350.0" style="-fx-background-color: #1b1b1b;">
+         <children>
+            <Text fx:id="statusText" fill="#ec7c26" layoutX="57.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="236.80006408691406">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
     </children>
 </AnchorPane>

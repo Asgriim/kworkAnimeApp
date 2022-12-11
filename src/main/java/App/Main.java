@@ -25,10 +25,10 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         user = new User(0,"","", Permissions.GUEST);
         Logger.getLogger("com.zaxxer.hikari.pool.PoolBase").setLevel(Level.OFF);
-         Logger.getLogger("com.zaxxer.hikari.pool.HikariPool").setLevel(Level.OFF);
-         Logger.getLogger("com.zaxxer.hikari.HikariDataSource").setLevel(Level.OFF);
-         Logger.getLogger("com.zaxxer.hikari.HikariConfig").setLevel(Level.OFF);
-         Logger.getLogger("com.zaxxer.hikari.util.DriverDataSource").setLevel(Level.OFF);
+        Logger.getLogger("com.zaxxer.hikari.pool.HikariPool").setLevel(Level.OFF);
+        Logger.getLogger("com.zaxxer.hikari.HikariDataSource").setLevel(Level.OFF);
+        Logger.getLogger("com.zaxxer.hikari.HikariConfig").setLevel(Level.OFF);
+        Logger.getLogger("com.zaxxer.hikari.util.DriverDataSource").setLevel(Level.OFF);
         databaseManager = MySqlManager.getInstance();
         if (!databaseManager.configureDb()){
             System.out.println("Не удалось подключится к серверу");
