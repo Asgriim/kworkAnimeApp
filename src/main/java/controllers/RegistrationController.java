@@ -83,11 +83,11 @@ public class RegistrationController {
     void register(ActionEvent event) {
         String login = loginField.getText();
         String password = passwordField.getText();
+        login = login.strip();
         if (login == null || login.equals("")){
             errorText.setText("Логин не может быть пустым");
             return;
         }
-        login = login.strip();
         if(login.contains(" ")){
             errorText.setText("Логин не может содержать пробелы");
             return;

@@ -53,6 +53,14 @@ public class AddController {
             errorText.setText("Добавьте описание");
             return;
         }
+        if (name.length() > 60){
+            errorText.setText("Название не может быть больше 60 символов");
+            return;
+        }
+        if (desc.length() > 800){
+            errorText.setText("Описание не может быть больше 800 символов");
+            return;
+        }
         Anime anime = new Anime(0,name.strip(),desc.strip());
 
         try {

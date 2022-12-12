@@ -261,6 +261,7 @@ public class MainController implements Initializable {
 
     @FXML
     void update(ActionEvent event) {
+        searchField.setText("");
         if(user.getPermission().equals(Permissions.GUEST)){
             animeList.clear();
             try {
