@@ -31,10 +31,13 @@ public class MySqlManager implements DatabaseManager{
 
     public static DatabaseManager getInstance() {
         if (instance == null){
-            instance = new MySqlManager("jdbc:mysql://remotemysql.com:3306/BlaLdACAvt", // бесплатная MySQL база данных
-                    "BlaLdACAvt", // логин
-                    "PCEYHiRpnt"// пароль
-            );
+//            instance = new MySqlManager("jdbc:mysql://remotemysql.com:3306/BlaLdACAvt", // бесплатная MySQL база данных
+//                    "BlaLdACAvt", // логин
+//                    "PCEYHiRpnt"// пароль
+//            );
+            instance = new MySqlManager("jdbc:mysql://sql7.freesqldatabase.com:3306/sql7586253",
+                    "sql7586253",
+                    "L9cl6cV3E9");
         }
         return instance;
     }
