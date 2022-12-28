@@ -23,7 +23,6 @@ public class Main extends Application {
     private static User user;
     @Override
     public void start(Stage stage) throws Exception {
-        // TODO: 27.12.2022 поставить здесь гостя
         user = new User(0,"","", Permissions.GUEST);
         Logger.getLogger("com.zaxxer.hikari.pool.PoolBase").setLevel(Level.OFF);
         Logger.getLogger("com.zaxxer.hikari.pool.HikariPool").setLevel(Level.OFF);
