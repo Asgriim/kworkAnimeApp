@@ -1,24 +1,32 @@
 package controllers;
 
 import App.Main;
-import data.Anime;
-import data.AnimeStatus;
-import data.Permissions;
-import data.User;
+import data.*;
 import database.DatabaseManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Pagination;
+import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class AnimeController implements Initializable {
 
@@ -26,6 +34,25 @@ public class AnimeController implements Initializable {
     public Text statusText;
 
     private final String statusTextPref = "Текущий статус: ";
+    @FXML
+    public ImageView posterView;
+    @FXML
+    public Pagination paginator;
+    @FXML
+    public HBox imgHbox;
+    @FXML
+    public Text avgGrade;
+    @FXML
+    public Button setGradeButton;
+
+    @FXML
+    public Slider gradeSlider;
+    @FXML
+    public Button writeReviewButton;
+    @FXML
+    public Text avgGrade1;
+    @FXML
+    public Button openReviewsButton;
 
     @FXML
     private Button addToWatchedButton;
@@ -46,7 +73,13 @@ public class AnimeController implements Initializable {
 
     private DatabaseManager databaseManager;
 
+    private List<Image> imageList;
+
     private User user;
+
+    private AnimePicture poster;
+
+    private List<AnimePicture> frames;
 
     private int animeId;
 
@@ -79,6 +112,39 @@ public class AnimeController implements Initializable {
             else {
                 statusText.setText(statusTextPref + "нет");
             }
+            double avgGr = databaseManager.getAnimeAvgGrade(tempAnime);
+            int grade = databaseManager.getUserAnimeGrade(user,tempAnime);
+            if (avgGr == 0){
+                avgGrade.setText("Общая оценка: нет");
+            }
+            else
+                avgGrade.setText("Общая оценка: " + avgGr + "/5");
+            if (grade == 0){
+                avgGrade1.setText("Ваша оценка: нет");
+            }
+            else
+                avgGrade1.setText("Ваша оценка: " + grade + "/5");
+            frames = databaseManager.getAnimePictures(tempAnime);
+            AnimePicture poster = frames.stream().filter(a -> a.getType().equals(ImageType.POSTER)).findAny().orElse(null);
+            if (poster == null){
+                return;
+            }
+            Image image = new Image(poster.getFile());
+            posterView.setImage(image);
+            frames.remove(poster);
+            if (frames.size() <= 3){
+                paginator.setMaxPageIndicatorCount(frames.size());
+                paginator.setPageCount(frames.size());
+            }
+            imageList = createImageList();
+            paginator.setPageCount(frames.size());
+            paginator.setPageFactory(new Callback<Integer, Node>() {
+                @Override
+                public Node call(Integer integer) {
+                    return createPage(integer);
+                }
+            });
+
         } catch (SQLException e) {
             e.printStackTrace();
             nameText.setText("Произошла ошибка");
@@ -155,9 +221,106 @@ public class AnimeController implements Initializable {
         }
     }
 
+
+    public HBox createPage(int index) {
+        ImageView imageView = new ImageView();
+        Image image = imageList.get(index);
+        imageView.setImage(image);
+        imageView.setFitHeight(300);
+        imageView.setFitWidth(800);
+//        imageView.setSmooth(true);
+//        imageView.setCache(true);
+
+        imageView.setPreserveRatio(true);
+        HBox pageBox = new HBox();
+        pageBox.setAlignment(Pos.CENTER);
+        pageBox.getChildren().add(imageView);
+        return pageBox;
+    }
+
+
+    List<Image> createImageList(){
+        return frames.stream().map(a -> new Image(a.getFile())).collect(Collectors.toList());
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
 
+    }
+
+    @FXML
+    public void gradeAction(ActionEvent event) {
+        if (user.getPermission().equals(Permissions.GUEST)){
+            openErrorPage();
+            return;
+        }
+        int grade = (int) gradeSlider.getValue();
+
+        avgGrade1.setText("Ваша оценка: " + grade + "/5");
+        try {
+            databaseManager.gradeAnime(user,tempAnime,grade);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        double avgGr = 0;
+        try {
+            avgGr = databaseManager.getAnimeAvgGrade(tempAnime);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (avgGr == 0){
+            avgGrade.setText("Общая оценка: нет");
+        }
+        else
+            avgGrade.setText("Общая оценка: " + avgGr + "/5");
+    }
+
+
+    @FXML
+    public void writeReviewAction(ActionEvent event) {
+        if (user.getPermission().equals(Permissions.GUEST)){
+            openErrorPage();
+            return;
+        }
+        Stage stage = new Stage();
+        Scene scene = null;
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("../view/addReview.fxml"));
+
+        try {
+            fxmlLoader.load();
+            Parent root =  fxmlLoader.getRoot();
+            Stage stage1 = new Stage();
+            stage1.setScene(new Scene(root));
+            stage1.setResizable(false);
+            AddReviewController controller = fxmlLoader.getController();
+            controller.setCurrAnime(tempAnime);
+            stage1.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    public void openReviews(ActionEvent event) {
+        Stage stage = new Stage();
+        Scene scene = null;
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("../view/reviews.fxml"));
+
+        try {
+            fxmlLoader.load();
+            Parent root =  fxmlLoader.getRoot();
+            Stage stage1 = new Stage();
+            stage1.setScene(new Scene(root));
+            stage1.setResizable(false);
+            ReviewsController controller = fxmlLoader.getController();
+            controller.setCurrAnime(tempAnime);
+            stage1.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -204,7 +204,7 @@ public class MainController implements Initializable {
             stage.close();
             stage = new Stage();
             Scene scene = null;
-            scene = new Scene(fxmlLoader.load(), 350, 600);
+            scene = new Scene(fxmlLoader.load());
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
@@ -420,7 +420,9 @@ public class MainController implements Initializable {
         if (selectedTable == animeTable && user.getPermission().equals(Permissions.ADMIN)){
             try {
                 databaseManager.removeAnime(user,selectedTable.getSelectionModel().getSelectedItem());
+                databaseManager.adminLog(user,selectedTable.getSelectionModel().getSelectedItem(),"remove anime");
                 update(new ActionEvent());
+
                 return;
             } catch (SQLException e) {
                 e.printStackTrace();

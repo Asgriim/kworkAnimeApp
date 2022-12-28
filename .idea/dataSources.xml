@@ -15,5 +15,19 @@
       <jdbc-url>jdbc:mysql://remotemysql.com:3306/BlaLdACAvt</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="defaultdb@mysql-329978e1-khaxan-1621.aivencloud.com" uuid="b5e5d9cb-9748-4e8c-911e-7fb989442ce1">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://mysql-329978e1-khaxan-1621.aivencloud.com:18043/defaultdb</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="docker-db@92.118.148.71" uuid="75f00c7b-7987-4f0f-983a-743209ea2fe0">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://92.118.148.71:5432/docker-db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

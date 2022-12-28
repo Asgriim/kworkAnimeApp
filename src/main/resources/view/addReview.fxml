@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="444.0" prefWidth="390.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddReviewController">
+    <children>
+        <AnchorPane prefHeight="60.0" prefWidth="389.0" style="-fx-background-color: #1b1b1b;" />
+        <Button fx:id="addButton" layoutX="154.0" layoutY="354.0" mnemonicParsing="false" onAction="#add" style="-fx-background-color: #ec7c26; -fx-background-radius: 6;" text="Добавить">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Button>
+      <TextArea fx:id="descriptionField" layoutX="40.0" layoutY="100.0" prefHeight="200.0" prefWidth="307.0" promptText="Отзыв" wrapText="true" />
+      <Text fx:id="errorText" fill="RED" layoutX="87.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="191.99996643066402">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+    </children>
+</AnchorPane>
