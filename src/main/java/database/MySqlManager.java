@@ -78,6 +78,32 @@ public class MySqlManager implements DatabaseManager{
                     "    Date TEXT,\n" +
                     "    FOREIGN KEY (AnimeId) REFERENCES Animes (Id) ON DELETE CASCADE\n" +
                     ")");
+            statement.execute("CREATE TABLE IF NOT EXISTS REVIEWS (\n" +
+                    "    Id INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                    "    UserId INT,\n" +
+                    "    Comment TEXT,\n" +
+                    "    AnimeId INT,\n" +
+                    "    Date TEXT,\n" +
+                    "    FOREIGN KEY (UserId) REFERENCES Users (Id) ON DELETE CASCADE,\n" +
+                    "    FOREIGN KEY (AnimeId) REFERENCES Animes (Id) ON DELETE CASCADE\n" +
+                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS GRADES(\n" +
+                    "    Id INT AUTO_INCREMENT PRIMARY KEY,\n" +
+                    "    UserId INT,\n" +
+                    "    AnimeId INT,\n" +
+                    "    Date TEXT,\n" +
+                    "    Grade INT,\n" +
+                    "    FOREIGN KEY (UserId) REFERENCES Users (Id) ON DELETE CASCADE,\n" +
+                    "    FOREIGN KEY (AnimeId) REFERENCES Animes (Id) ON DELETE CASCADE\n" +
+                    ")");
+            statement.execute("CREATE TABLE IF NOT EXISTS ADMIN_LOG(\n" +
+                    "    AdminId INT,\n" +
+                    "    AnimeId INT,\n" +
+                    "    AnimeName TEXT,\n" +
+                    "    Action TEXT,\n" +
+                    "    Date TEXT,\n" +
+                    "    FOREIGN KEY (AdminId) REFERENCES Users (Id) ON DELETE CASCADE\n" +
+                    ")");
             return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
